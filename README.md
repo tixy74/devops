@@ -1,6 +1,31 @@
-# DevOps
-## Docker
-### Intro
-On utilise une image pour créer un container
-- Récupérer une image de Docker Store : ``docker pull image_name``
-- Run un container basé sur l'image : ``docker run image_name command`` 
+<!-- # DevOps -->
+# Docker
+## Image
+On utilise une image qui est le fichier de system et la configuration de l'applicationpour pour créer un container :
+- Search for images in the store : ``docker search``
+- Récupérer une image de Docker Store : ``docker pull image_name[:version]`` (un docker run fait un pull si pas en local)
+- Voir les images en local : ``docker images``
+- Know more about a specific image : ``docker inspect alpine``
+### Dockerfile
+- Base image : `FROM image_name[:version]`
+- Run command (add a new layer of the image) : `RUN command`. Ex : 
+    - Install modules : `RUN apk add --update module_name`
+- Copy files in the image : ``COPY source dest``
+- Specify a port : `EXPOSE port_number`
+- Run command on startup of the container : `CMD [ "executable", args...]`
+- Build : ``docker build -t timlab74/app_name .
+## Run un container (instance d'une image)
+- Run un container basé sur une image : ``docker run image_name command``
+- Run an interacive termial with ``-it`` (useful for debug). Ex : ``docker run -it image_name command`` (quitter avec ``exit``)
+- Voir les container en run : ``docker ps [-a]`` ou ``-a`` sers d'historique
+- ``docker run --help``
+- Run en detatched mode (détache le run du terminal): ``docker run -id image_name``
+- Stop un run : ``docker rm -f container_name/id``. Combinaison de : 
+    - ``docker stop container_id``
+    - ``docker rm container_id``
+- Assign a name : ``docker run --name container_name container_id``
+- Pass env var : ``docker run -e VARNAME="..."``. Vars : 
+    - AUTHOR
+- Publier tout les port exposé du container a des ports random : ``-P``
+- See running docker ports : ``docker port container_name``
+- Set specific ports : ``-p container_port:host_port``
