@@ -1,13 +1,10 @@
 package fr.takima.training.simpleapi.controller;
 
 import org.springframework.web.bind.annotation.*;
-
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
-@CrossOrigin
 public class GreetingController {
-
     private static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
@@ -17,7 +14,6 @@ public class GreetingController {
     }
 
     class Greeting {
-
         private final long id;
         private final String content;
 

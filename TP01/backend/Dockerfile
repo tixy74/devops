@@ -11,11 +11,11 @@ ENV MYAPP_HOME /opt/myapp
 # On ce place dans le répertoire /opt/myapp
 WORKDIR $MYAPP_HOME
 # On copy le pom.xml en local sur le container (à la racine de workdir du coup)
-COPY pom.xml .
+COPY simple-api/pom.xml .
 # Idem pour le dossier src
-COPY src ./src
+COPY simple-api/src ./src
 # On exécute la commande suivante pour build le projet
-RUN mvn dependency:go-offline
+# RUN mvn dependency:go-offline
 RUN mvn package -DskipTests
 
 # Run

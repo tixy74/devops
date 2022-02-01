@@ -30,6 +30,7 @@ On utilise une image qui est le fichier de system et la configuration de l'appli
 - Publier tout les port exposé du container a des ports random : ``-P``
 - See running docker ports : ``docker port container_name``
 - Set specific ports : ``-p container_port:host_port``
+- Run a command in a running container : `docker exec [OPTIONS] CONTAINER COMMAND [ARG...]`
 ## Network
 - Créer un réseau : ``docker network create tp1-network``
 - Lier as un container : Ajouter `--network=network_name` dans la command run
@@ -57,6 +58,16 @@ On utilise une image qui est le fichier de system et la configuration de l'appli
     - Ajout d'un fichier `.gitignore`
 - Documentation : ``git <command> --help`` 
 ## Processus
-- Ajout d'un fichier ou de tous dans la partie staged : ``git add <file/-A>``
+- Ajout d'un fichier ou de tous dans la partie staged : ``git add <file/-A/.>``
 - Commit des fichiers staged : ``git commit -m "Commentaire"
+- Push sur origin (la branche remote) : `git push origin master`
+## Basic commands
+- Clone a project : `git clone <url_of_the_project>`
+- Fetch distand modifs (sans les merge) : `git fetch -p`
+- Fetch et les merge dans la branch : `git pull`
+- Merge une branche dans la branche actuel : `git merge <branch_name>`
+- Rebase la branche actuel sur une autre : `git rebase <branch_name>`
+## Autre 
+- Stash (mettre les modifs de coté pour faire un pull par exemple) : ``git stash``
+- Rewrite history : `git rebase -i`
 

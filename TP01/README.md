@@ -17,15 +17,16 @@ Dans un dossier ``database`` :
     POSTGRES_USER=admin \
     ```
 - Build : ``docker build -t timlab74/tp1/database ./database``
+- Supprimer le container : `docker rm -f database`
 - Re build : ``docker build --no-cache -t timlab74/tp1/database ./database``
 - Créer un network : ``docker network create tp1-network``
 - Run database : ``docker run -d --network=tp1-network --name database -e POSTGRES_PASSWORD=admin timlab74/tp1/database``
-- Run adminer : ``docker run -d --network=tp1-network --name database_view -p 8080:8080 adminer``
+- Run adminer : ``docker run -d --network=tp1-network --name database_client -p 8080:8080 adminer``
 - Vérifié les deux container avec : ``docker ps`` qui donner : 
     ```
     CONTAINER ID   IMAGE                   COMMAND                  CREATED              STATUS              PORTS                    NAMES
     669ee43005b1   timlab74/tp1/database   "docker-entrypoint.s…"   About a minute ago   Up About a minute   5432/tcp                 database
-    fb53f827212e   adminer                 "entrypoint.sh docke…"   5 minutes ago        Up 5 minutes        0.0.0.0:8080->8080/tcp   database_view
+    fb53f827212e   adminer                 "entrypoint.sh docke…"   5 minutes ago        Up 5 minutes        0.0.0.0:8080->8080/tcp   database_client
     ```
 - Scrpit d'initialisations :
     - Création d'un dossier scrpits dans lequel j'y ai mis :
@@ -86,5 +87,76 @@ Dans un dossier ``backend`` :
 - Build : ``docker build -t timlab74/tp1/backend ./backend``
 - Re build : ``docker build --no-cache -t timlab74/tp1/backend ./backend``
 - Run backend : ``docker run --name backend timlab74/tp1/backend`` --> ``Hello world``
-### Multistage build : Maven implementation
-- Sur le site https://start.spring.io/, j'ai généré l'applicat
+### Multistage build : Hello world avec maven
+- Sur le site https://start.spring.io/, j'ai généré l'application avec les paramètre suivants :
+    - Project: Maven
+    - Language: Java 11
+    - Spring Boot: 2.2.4
+    - Packaging: Jar
+    - Dependencies: Spring Web (for now)
+- Dans le src/main/... j'ai créé un dossier controller dans lequel on crée un fichier ``GreetingController.java`` avec le code adéquoi
+- Le dossier généré avec le controller ajouter a été mis dans le dossier backend
+- Dans le dockerfile de backend, on change le code précédent par : 
+    ```
+    # Build
+    # Choisir l'image la version 3.6.3-jdk-11 de maven comme base image et la nommé myapp-build 
+    FROM maven:3.6.3-jdk-11 AS myapp-build
+    # Définir la variable d'environement MYAPP_HOME à /opt/myapp
+    ENV MYAPP_HOME /opt/myapp
+    # On ce place dans le répertoire /opt/myapp
+    WORKDIR $MYAPP_HOME
+    # On copy le pom.xml en local sur le container (à la racine de workdir du coup)
+    COPY simple-api-hello_world/pom.xml .
+    # Idem pour le dossier src
+    COPY simple-api-hello_world/src ./src
+    # On exécute la commande suivante pour build le projet
+    RUN mvn dependency:go-offline
+    RUN mvn package -DskipTests
+
+    # Run
+    # Choisir la version 11-jre de openjdk pour base image
+    FROM openjdk:11-jre
+    # On redéfinit la variable et le workdir
+    ENV MYAPP_HOME /opt/myapp
+    WORKDIR $MYAPP_HOME
+    # On copy le .jar dans target (dans le container) qu'on dans le répertoir nommé myapp.jar
+    COPY --from=myapp-build $MYAPP_HOME/target/*.jar $MYAPP_HOME/myapp.jar
+    # On exécute la commande suivante au démarage du container pour run l'API
+    ENTRYPOINT java -jar myapp.jar
+    ```
+- Re build : ``docker build --no-cache -t timlab74/tp1/backend ./backend``
+- Run backend sur le port 8081 : ``docker run --name backend -p 8081:8080  timlab74/tp1/backend`` (vu que 8080 est déjà utilisé par la database_client). On as donc le résultat sur le lien http://localhost:8081 avec le rendu :
+    ```
+    {
+    "id": 1,
+    "content": "Hello, World!"
+    }
+    ``` 
+    Où l'id s'incrémente à chaque refresh
+### Backend API
+- Dans le dossier backend, on met le dossier de simple-api récupérer sur git via la commande : `git clone https://github.com/Mathilde-lorrain/simple-api.git`
+- On modifie le Dockerfile pour changer le path devant src et pom.xml (on enlève simple-api-hello_world)
+- on modifie l'application.yml avec :
+    ```
+    url: jdbc:postgresql://database/db
+    username: admin
+    password: admin
+    ```
+- Re build : ``docker build --no-cache -t timlab74/tp1/backend ./backend``
+- Run backend sur le port 8081 : ``docker run --name backend --network=tp1-network -p 8081:8080  timlab74/tp1/backend``
+- On peut tester avec le lien http://localhost:8081/departments/IRC/students qui affiche : 
+    ```
+    [
+        {
+            "id": 1,
+            "firstname": "Eli",
+            "lastname": "Copter",
+            "department": {
+                "id": 1,
+                "name": "IRC"
+            }
+        }
+    ]
+    ```
+## Http server
+Dans un dossier ``frontend``
