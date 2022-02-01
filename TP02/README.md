@@ -88,3 +88,11 @@
 - Generate a token key for sonar here https://sonarcloud.io/account/security/
 - Put it in Github secrets
 - With those key, replace the mvn command with : `mvn -B verify sonar:sonar -Dsonar.projectKey=tixy74_devops -Dsonar.organization=tixy74 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file ./TP01/backend/simple-api/pom.xml`
+- Generate github token with the link https://github.com/settings/tokens
+- You don't need to put it in Github secrets, it is automatic
+- Before the mvn command, add : 
+    ```
+    env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    ```
