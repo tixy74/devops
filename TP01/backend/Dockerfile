@@ -15,7 +15,7 @@ COPY simple-api/pom.xml .
 # Idem pour le dossier src
 COPY simple-api/src ./src
 # On exécute la commande suivante pour build le projet
-# RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline
 RUN mvn package -DskipTests
 
 # Run
