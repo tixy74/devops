@@ -31,6 +31,7 @@ On utilise une image qui est le fichier de system et la configuration de l'appli
 - See running docker ports : ``docker port container_name``
 - Set specific ports : ``-p container_port:host_port``
 - Run a command in a running container : `docker exec [OPTIONS] CONTAINER COMMAND [ARG...]`
+- Copy files/floders between container and local filesystem : `docker cp [OPTIONS] CONTAINER:SRC_PATH DEST_PATH` ou `docker cp [OPTIONS] SRC_PATH CONTAINER:DEST_PATH|-`
 ## Network
 - Créer un réseau : ``docker network create tp1-network``
 - Lier as un container : Ajouter `--network=network_name` dans la command run

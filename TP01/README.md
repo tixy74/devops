@@ -159,4 +159,35 @@ Dans un dossier ``backend`` :
     ]
     ```
 ## Http server
+### Hello world
 Dans un dossier ``frontend``
+- Création d'un index.html avec un h1 Hello world!
+- Création d'un Dockerfile avec :
+    ```
+    FROM httpd
+    COPY ./index.html /usr/local/apache2/htdocs/
+    ```
+- Build : ``docker build -t timlab74/tp1/frontend ./frontend``
+- Re build : ``docker build --no-cache -t timlab74/tp1/frontend ./frontend``
+- Run frontend : ``docker run --name frontend -p 80:80 timlab74/tp1/frontend``. On est sur le port 80 (port par défaut) alors si on va simplement sur le lien http://localhost, Hello world s'affiche.
+### Configuration Proxy et reverse proxy
+On met le reverse proxy pour bloqué des IP's en cas d'attaque
+- Récupérer le httpd.conf avec : `docker cp frontend:/usr/local/apache2/conf/httpd.conf ./frontend`
+- Y ajouter : 
+    ```
+    ServerName localhost
+    <VirtualHost *:80>
+        ProxyPreserveHost On
+        ProxyPass / http://backend:8080/
+        ProxyPassReverse / http://backend:8080/
+    </VirtualHost>
+    ```
+    Et y décommenter les lignes :
+    ```
+    LoadModule proxy_module modules/mod_proxy.so
+    LoadModule proxy_http_module modules/mod_proxy_http.so
+    ```
+- On ajoute au Dockerfile la ligne : `COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf`, pour reprendre la fichier dans l'image
+- Build avec la même command et run avec : `docker run --name frontend --network=tp1-network -p 80:80 -d timlab74/tp1/frontend`
+## Docker compose
+- Création du fichier ``docker-compose.yml`` à la racine du projet
