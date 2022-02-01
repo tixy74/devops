@@ -68,7 +68,8 @@
 - The `needs: test-backend` line is needed because we want git to build only if the test pass
 - Test if in the github repository in the menu action --> Green again ! :D
 ## Publish
-- Generate a token in https://hub.docker.com/settings/security 
+- Generate a token in https://hub.docker.com/settings/security
+- L'ajouter dans les secrets sur Github
 - Add before the Build image and pushs: 
     ```
     - name: Login to DockerHub
@@ -79,3 +80,11 @@
      # build on feature branches, push only on main branch
     push: ${{ github.ref == 'refs/heads/main' }}
     ```
+- On peux vérifié sur le lien https://hub.docker.com/repository/docker/timlab74/tp-devops-cpe. Encore une fois, ça a fonctionné :DD
+# Setup Quality Gate
+- Create an organization in https://sonarcloud.io/create-organization
+- Create a project
+- Get both keys in https://sonarcloud.io/project/information?id=tixy74_devops
+- Generate a token key for sonar here https://sonarcloud.io/account/security/
+- Put it in Github secrets
+- With those key, replace the mvn command with : `mvn -B verify sonar:sonar -Dsonar.projectKey=tixy74_devops -Dsonar.organization=tixy74 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file ./TP01/backend/simple-api/pom.xml`
