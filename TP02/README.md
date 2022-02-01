@@ -69,4 +69,13 @@
 - Test if in the github repository in the menu action --> Green again ! :D
 ## Publish
 - Generate a token in https://hub.docker.com/settings/security 
-- 
+- Add before the Build image and pushs: 
+    ```
+    - name: Login to DockerHub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+    ```
+- Dans les 3 Build image and pushs, ajouter respectivement 
+    ```
+     # build on feature branches, push only on main branch
+    push: ${{ github.ref == 'refs/heads/main' }}
+    ```
