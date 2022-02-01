@@ -29,39 +29,44 @@
         - name: Build and test with Maven
             run: cd TP01/backend/simple-api && mvn clean verify
     ```
-- Test it in the github repository in the menu action --> It's green ! :D 
+- Test it in the github repository in the menu action --> It's green ! :) 
 ## CD
 - On https://github.com/tixy74/devops/settings/secrets/actions, add your credential as sectrets
 - in the `.main.yml`, add in the jobs : 
     ```
     #define job to build and publish docker image
-  build-and-push-docker-image:
-    needs: test-backend
-    # run only when code is compiling and tests are passing
-    runs-on: ubuntu-latest
-    # steps to perform in job
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Build image and push backend
-        uses: docker/build-push-action@v2
-        with:
-          # relative path to the place where source code with Dockerfile is located
-          context: ./TP01/backend/simple-api
-          # Note: tags has to be all lower-case
-          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:simple-api
-      - name: Build image and push database
-        uses: docker/build-push-action@v2
-        with:
-          # relative path to the place where source code with Dockerfile is located
-          context: ./TP01/database
-          # Note: tags has to be all lower-case
-          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:database
-      - name: Build image and push httpd
-        uses: docker/build-push-action@v2
-        with:
-          # relative path to the place where source code with Dockerfile is located
-          context: ./TP01/frontend
-          # Note: tags has to be all lower-case
-          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:frontend
+    build-and-push-docker-image:
+        needs: test-backend
+        # run only when code is compiling and tests are passing
+        runs-on: ubuntu-latest
+        # steps to perform in job
+        steps:
+        - name: Checkout code
+            uses: actions/checkout@v2
+        - name: Build image and push backend
+            uses: docker/build-push-action@v2
+            with:
+            # relative path to the place where source code with Dockerfile is located
+            context: ./TP01/backend
+            # Note: tags has to be all lower-case
+            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:simple-api
+        - name: Build image and push database
+            uses: docker/build-push-action@v2
+            with:
+            # relative path to the place where source code with Dockerfile is located
+            context: ./TP01/database
+            # Note: tags has to be all lower-case
+            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:database
+        - name: Build image and push httpd
+            uses: docker/build-push-action@v2
+            with:
+            # relative path to the place where source code with Dockerfile is located
+            context: ./TP01/frontend
+            # Note: tags has to be all lower-case
+            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:frontend
     ```
+- The `needs: test-backend` line is needed because we want git to build only if the test pass
+- Test if in the github repository in the menu action --> Green again ! :D
+## Publish
+- Generate a token in https://hub.docker.com/settings/security 
+- 
