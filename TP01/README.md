@@ -1,5 +1,5 @@
-# TP 1
-## Initialisation
+
+# Initialisation
 Pull les trois images : 
 ```
 docker pull httpd
@@ -8,7 +8,7 @@ docker pull openjdk:11
 docker pull adminer
 docker pull maven
 ```
-## Database
+# Database
 Dans un dossier ``database`` : 
 - Création d'un Dockerfile avec :
     ```
@@ -66,8 +66,8 @@ Dans un dossier ``database`` :
     - Password : admin
     - Database : db
 - Gérer le perte de données en cas de supression du container en ajoutant : ``-v /database:/var/lib/postgresql/data`` dans la command pour run
-## Backend API
-### Basics : Hello world with simple javac
+# Backend API
+## Basics : Hello world with simple javac
 Dans un dossier ``backend`` :
 - Création d'un Main.java avec :
     ```
@@ -87,7 +87,7 @@ Dans un dossier ``backend`` :
 - Build : ``docker build -t timlab74/tp1/backend ./backend``
 - Re build : ``docker build --no-cache -t timlab74/tp1/backend ./backend``
 - Run backend : ``docker run --name backend timlab74/tp1/backend`` --> ``Hello world``
-### Multistage build : Hello world avec maven
+## Multistage build : Hello world avec maven
 - Sur le site https://start.spring.io/, j'ai généré l'application avec les paramètre suivants :
     - Project: Maven
     - Language: Java 11
@@ -133,7 +133,7 @@ Dans un dossier ``backend`` :
     }
     ``` 
     Où l'id s'incrémente à chaque refresh
-### Backend API
+## Backend API
 - Dans le dossier backend, on met le dossier de simple-api récupérer sur git via la commande : `git clone https://github.com/Mathilde-lorrain/simple-api.git`
 - On modifie le Dockerfile pour changer le path devant src et pom.xml (on enlève simple-api-hello_world)
 - on modifie l'application.yml avec :
@@ -158,8 +158,8 @@ Dans un dossier ``backend`` :
         }
     ]
     ```
-## Http server
-### Hello world
+# Http server
+## Hello world
 Dans un dossier ``frontend``
 - Création d'un index.html avec un h1 Hello world!
 - Création d'un Dockerfile avec :
@@ -170,7 +170,7 @@ Dans un dossier ``frontend``
 - Build : ``docker build -t timlab74/tp1/frontend ./frontend``
 - Re build : ``docker build --no-cache -t timlab74/tp1/frontend ./frontend``
 - Run frontend : ``docker run --name frontend -p 80:80 timlab74/tp1/frontend``. On est sur le port 80 (port par défaut) alors si on va simplement sur le lien http://localhost, Hello world s'affiche.
-### Configuration Proxy et reverse proxy
+## Configuration Proxy et reverse proxy
 On met le reverse proxy pour bloqué des IP's en cas d'attaque
 - Récupérer le httpd.conf avec : `docker cp frontend:/usr/local/apache2/conf/httpd.conf ./frontend`
 - Y ajouter : 
@@ -189,7 +189,7 @@ On met le reverse proxy pour bloqué des IP's en cas d'attaque
     ```
 - On ajoute au Dockerfile la ligne : `COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf`, pour reprendre la fichier dans l'image
 - Build avec la même command et run avec : `docker run --name frontend --network=tp1-network -p 80:80 -d timlab74/tp1/frontend`. On peut vérifier sur http://localhost
-## Docker compose
+# Docker compose
 - Création du fichier ``docker-compose.yml`` à la racine du projet avec :
     ```
     version: '3.7'

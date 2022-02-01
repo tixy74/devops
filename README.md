@@ -38,6 +38,26 @@ On utilise une image qui est le fichier de system et la configuration de l'appli
 ## Database
 - Dans un container de base de données les scrpit sql mis dans le dossier `docker-entrypoint-initdb.d` seront exécutés dans l'ordre alphabétique
 - Gérer la perte de données après la suppression d'un container via les volumes : ajout de ``-v /directory:/var/lib/postgresql/data``
+## Docker compose
+- Dans un fichier docker-compose.yml on y met : 
+    ```
+    version: '3.7'
+    services:
+        backend:
+            build:
+                <./DockerFile_rep>
+            networks:
+                - <network_name>
+            depends_on:
+                - <container_name>
+            volumes:
+                - /<DockerFile_rep>:/<Save_rep>
+             ports:
+                - <container_port>:<host_port>
+        networks:
+            <network_name>:
+    ```
+- On execute avec : `docker-compose up`
 # Git
 ## Inspection command
 - Working directory changes details : ``git diff``
