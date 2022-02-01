@@ -188,6 +188,36 @@ On met le reverse proxy pour bloqué des IP's en cas d'attaque
     LoadModule proxy_http_module modules/mod_proxy_http.so
     ```
 - On ajoute au Dockerfile la ligne : `COPY ./httpd.conf /usr/local/apache2/conf/httpd.conf`, pour reprendre la fichier dans l'image
-- Build avec la même command et run avec : `docker run --name frontend --network=tp1-network -p 80:80 -d timlab74/tp1/frontend`
+- Build avec la même command et run avec : `docker run --name frontend --network=tp1-network -p 80:80 -d timlab74/tp1/frontend`. On peut vérifier sur http://localhost
 ## Docker compose
-- Création du fichier ``docker-compose.yml`` à la racine du projet
+- Création du fichier ``docker-compose.yml`` à la racine du projet avec :
+    ```
+    version: '3.7'
+    services:
+        backend:
+            build:
+                ./backend
+            networks:
+                - tp1-network
+            depends_on:
+                - database
+        database:
+            build:
+                ./database
+            networks:
+                - tp1-network
+            volumes:
+                - /database:/var/lib/postgresql/data
+        httpd:
+            build:
+                ./frontend
+            ports:
+                - 80:80
+            networks:
+                - tp1-network
+            depends_on:
+                - backend
+    networks:
+        tp1-network:
+    ```
+- Lancer avec : `docker-compose up`. On peut vérifier sur le lien http://localhost ou http://localhost/departments/IRC/students
