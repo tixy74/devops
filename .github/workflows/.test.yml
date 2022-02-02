@@ -1,11 +1,6 @@
 name: CI devops 2022 CPE test
 on:
-  #to begin you want to launch this job in main and develop
-  push:
-    branches: 
-      - main
-      - develop
-  pull_request:
+  workflow_call:
 
 jobs:
   test-backend:

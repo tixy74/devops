@@ -3,7 +3,7 @@ on:
   #to begin you want to launch this job in main and develop
   push:
     branches: 
-      - main
+      - develop
   pull_request:
 
 jobs:
@@ -12,11 +12,4 @@ jobs:
     # steps to perform in job
     steps:
       - uses: ./.github/workflows/.test.yml
-  build:
-    # run only when code is compiling and tests are passing
-    needs: test-backend
-    runs-on: ubuntu-latest
-    # steps to perform in job
-    steps:
-      - uses: ./.github/workflows/.production.yml
     

@@ -100,20 +100,22 @@
 - Then when you commit and push, go check on https://sonarcloud.io/project/overview?id=tixy74_devops. Once again, this is green ! :DDD (smiley très content)
 # Split pipeline
 ## Split test and for them to be executed by push on different branch
-- Create et `.test.yml`, put the following config and remove the test-backend job to put it in this file. Config : 
+- Create et `.test.yml`, put the following config and put the job test-backend. Config :
   ```
-  name: CI devops 2022 CPE
+  name: CI devops 2022 CPE test
   on:
-    #to begin you want to launch this job in main and develop
-    push:
-      branches: 
-        - main
-    pull_request:
+    workflow_call:
+  ```
+- Create et `.production.yml`, put the following config and put the jobs build and push. Config : 
+  ```
+  name: CI devops 2022 CPE production
+  on:
+    workflow_call:
   ```
 - Remove the `- develop` in branchs in the main so that the dockers are pushed only when there is a push in main
 ## Split the build to avoid repetition
 Since the jobs (actually they are steps) of building and pushing the 3 and after 4 dockers is the same code with a few change, in here, we are going to make a file that dose it with vars and use those.
-- Make a `.production.yml` in the workflows directory and put :
+- Make a `.build_and_push.yml` in the workflows directory and put :
     ```
     name: CI devops 2022 CPE
     on:
@@ -139,7 +141,7 @@ Since the jobs (actually they are steps) of building and pushing the 3 and after
               # build on feature branches, push only on main branch
               push: ${{ github.ref == 'refs/heads/main' }}
     ```
-- Replace the 3 steps of the build and push docker images by 3 jobs using the .production.yml
+- Replace the 3 steps of the build and push docker images by 3 jobs using the .build_and_push.yml
     ```
     #define job to build and publish docker image of backend
     build-and-push-backend:
