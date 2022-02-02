@@ -23,5 +23,10 @@ services:
       - tp1-network
     depends_on:
       - backend
+  frontend:
+    build:
+      ../TP03/front
+    networks:
+      - tp1-network
 networks:
   tp1-network:

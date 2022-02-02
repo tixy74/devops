@@ -118,3 +118,14 @@
         - 80:80
     ```
 - Add : `- frontend` to the roles in the playbook.yml
+- Change httpd.conf for that : 
+  ```
+  ServerName localhost
+  <VirtualHost *:80>
+      ProxyPreserveHost On
+      ProxyPass /api http://backend:8080/
+      ProxyPassReverse /api http://backend:8080/
+      ProxyPass / http://frontend:80/
+      ProxyPassReverse / http://frontend:80/
+  </VirtualHost>
+  ```
