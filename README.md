@@ -1,4 +1,4 @@
-Ce readme est la synthèse globale du module, mais il y a des README pour les TPs dans les dossiers
+Ce readme est la synthèse globale du module (principalement les TD et le récap de toute les commandes), mais il y a des README pour les TPs dans les dossiers TPXX
 # Docker
 ## Image
 On utilise une image qui est le fichier de system et la configuration de l'applicationpour pour créer un container :
@@ -91,4 +91,51 @@ On utilise une image qui est le fichier de system et la configuration de l'appli
 ## Autre 
 - Stash (mettre les modifs de coté pour faire un pull par exemple) : ``git stash``
 - Rewrite history : `git rebase -i`
-
+# Ansible
+## SSH connection :
+- Changer les droits pour la clé : `chmod 400 <path_to_your_key>`
+- Connecter au SSH server : `ssh -i <path_to_your_key> centos@<your_server_domain_name>`
+- Fermé le terminal ssh : `exit`
+## Ansible connection :
+- Modifié le fichier ``/etc/ansible/hosts`` et y ajouter : `centos@timothee.labrosse.takima.cloud` (`<distribution>@<server_domain_name>`)
+- Ping the server : 
+    - Avec la clé : `ansible all -m ping --private-key=<path_to_key> -u centos`
+    - Avec l'inventory : `ansible all -i ansible/inventories/setup.yml -m ping`
+- Get OS distribution : `ansible all -i ansible/inventories/setup.yml -m setup -a "filter=ansible_distribution*"`
+## Setup Apache Server
+- Install apache : ``ansible all -m yum -a "name=httpd state=present" --private-key=./id_rsa -u centos --become`` where `./id_rsa` is the path to your key
+- Create an HTML page : `ansible all -m shell -a 'echo "<html><h1>Hello CPE</h1></html>" >> /var/www/html/index.html' --private-key=./id_rsa -u centos --become`
+- Start Apache service : `ansible all -m service -a "name=httpd state=started" --private-key=./id_rsa -u centos --become`
+- Remove it : `ansible all -i ansible/inventories/setup.yml -m yum -a "name=httpd state=absent" --become`
+## Inventory
+- Dans un fichier `ansible/inventories/setup.yml` mettre : 
+    ```
+    all:
+      vars:
+        ansible_user: centos
+        ansible_ssh_private_key_file: <path_to_key>
+      children:
+        prod:
+          hosts: domain_name or ip
+    ```
+## Playbook
+- Dans un fichier `playbook.yml` dans le dossier ansible mettre :
+    ```
+    - hosts: all
+      gather_facts: false
+      become: yes
+      tasks:
+        - name: <taks_name>
+          <task>:
+    ```
+    Task exemples : 
+    - `ping`
+    - 
+    ```
+        command: 
+            cmd: ...
+    ```
+    - `dnf`
+- Execute with `ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml`
+### Role
+- Create a docker role with : `ansible-galaxy init ansible/roles/docker`
