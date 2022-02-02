@@ -4,40 +4,13 @@ on:
   push:
     branches: 
       - main
-      - develop
   pull_request:
 
 jobs:
-  test-backend:
-    runs-on: ubuntu-18.04
-    only:
-      changes:
-        - ./TP01/backend/**/*
-    steps:
-      #checkout your github code using actions/checkout@v2.3.3
-      - uses: actions/checkout@v2.3.3
-      
-      #do the same with another action (actions/setup-java@v2) that enable to setup jdk 11
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-      
-      #finally build your app with the latest command
-      - name: Build and test with Maven
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify sonar:sonar -Dsonar.projectKey=tixy74_devops -Dsonar.organization=tixy74 -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }} --file ./TP01/backend/simple-api/pom.xml
   #define job to build and publish docker image of backend
   build-and-push-backend:
     # run only when code is compiling and tests are passing
     needs: test-backend
-    # run only when directory backend as any changes in it
-    only:
-      changes:
-        - ./TP01/backend/**/*
     runs-on: ubuntu-latest
     # steps to perform in job
     steps:
@@ -47,10 +20,6 @@ jobs:
           docker_name: "tp-devops-cpe-backend"
     #define job to build and publish docker image of backend
   build-and-push-database:
-    # run only when directory database as any changes in it
-    only:
-      changes:
-        - ./TP01/database/**/*
     runs-on: ubuntu-latest
     # steps to perform in job
     steps:
@@ -59,15 +28,19 @@ jobs:
           path: "./TP01/database"
           docker_name: "tp-devops-cpe-database"
     #define job to build and publish docker image of backend
-  build-and-push-frontend:
-    # run only when directory frontend as any changes in it
-    only:
-      changes:
-        - ./TP01/frontend/**/*
+  build-and-push-httpd:
     runs-on: ubuntu-latest
     # steps to perform in job
     steps:
       - uses: ./.github/workflows/.production.yml
         with:
           path: "./TP01/httpd"
+          docker_name: "tp-devops-cpe-httpd"
+  build-and-push-frontend:
+    runs-on: ubuntu-latest
+    # steps to perform in job
+    steps:
+      - uses: ./.github/workflows/.production.yml
+        with:
+          path: "./TP03/frontend"
           docker_name: "tp-devops-cpe-httpd"
