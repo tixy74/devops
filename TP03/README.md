@@ -91,3 +91,30 @@
     - http://timothee.labrosse.takima.cloud/departments/IRC/students
     - http://timothee.labrosse.takima.cloud/
 # Front
+- Clone the git `https://github.com/Mathilde-lorrain/devops-front` and put it in the TP03 folder
+- To the main workflow add for git action to push de new docker image frontend
+  ```
+  - name: Build image and push frontend
+    uses: docker/build-push-action@v2
+    with:
+      # relative path to the place where source code with Dockerfile is located
+      context: ./TP03/devops-front
+      # Note: tags has to be all lower-case
+      tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-frontend
+      # build on feature branches, push only on main branch
+      push: ${{ github.ref == 'refs/heads/main' }}
+  ```
+- Create role : `ansible-galaxy init ansible/roles/frontend`
+- Delete the unused files
+- Add the follwing lines in the tasks/main.yml : 
+    ```
+    - name: Run Frontend
+      docker_container:
+        name: Frontend
+        image: timlab74/tp-devops-cpe-frontend
+      networks:
+        - name : network_one
+      ports:
+        - 80:80
+    ```
+- Add : `- frontend` to the roles in the playbook.yml
