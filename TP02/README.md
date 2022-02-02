@@ -61,9 +61,9 @@
             uses: docker/build-push-action@v2
             with:
             # relative path to the place where source code with Dockerfile is located
-            context: ./TP01/frontend
+            context: ./TP01/httpd
             # Note: tags has to be all lower-case
-            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-frontend
+            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-httpd
     ```
 - The `needs: test-backend` line is needed because we want git to build only if the test pass
 - Test if in the github repository in the menu action --> Green again ! :D
@@ -98,3 +98,74 @@
     ```
 - In the website https://sonarcloud.io/project/new_code?id=tixy74_devops put `Previous version`
 - Then when you commit and push, go check on https://sonarcloud.io/project/overview?id=tixy74_devops. Once again, this is green ! :DDD (smiley très content)
+# Split pipeline
+- Make a `.production.yml` in the workflows directory and put :
+    ```
+    name: CI devops 2022 CPE
+    on:
+      workflow_call:
+          inputs:
+            path:
+              required: true
+              type: string
+            docker_name:
+              required: true
+              type: string
+            
+    jobs:
+      build-and-push-docker-image:
+        steps:
+          - name: Build image and push backend
+            uses: docker/build-push-action@v2
+            with:
+              # relative path to the place where source code with Dockerfile is located
+              context: ${{inputs.path}}
+              # Note: tags has to be all lower-case
+              tags: ${{secrets.DOCKER_USERNAME}}/${{inputs.docker_name}}
+              # build on feature branches, push only on main branch
+              push: ${{ github.ref == 'refs/heads/main' }}
+    ```
+- Replace the 3 steps of the build and push docker images by 3 jobs using the .production.yml and add  a only: changes to do the job only if the concerned directory is changed : 
+    ```
+    #define job to build and publish docker image of backend
+    build-and-push-backend:
+      # run only when code is compiling and tests are passing
+      needs: test-backend
+      # run only when directory backend as any changes in it
+      only:
+        changes:
+          - ./TP01/backend/**/*
+      runs-on: ubuntu-latest
+      # steps to perform in job
+      steps:
+        - uses: ./.github/workflows/.production.yml
+          with:
+            path: "./TP01/backend"
+            docker_name: "tp-devops-cpe-backend"
+      #define job to build and publish docker image of backend
+    build-and-push-database:
+      # run only when directory database as any changes in it
+      only:
+        changes:
+          - ./TP01/database/**/*
+      runs-on: ubuntu-latest
+      # steps to perform in job
+      steps:
+        - uses: ./.github/workflows/.production.yml
+          with:
+            path: "./TP01/database"
+            docker_name: "tp-devops-cpe-database"
+      #define job to build and publish docker image of backend
+    build-and-push-frontend:
+      # run only when directory frontend as any changes in it
+      only:
+        changes:
+          - ./TP01/frontend/**/*
+      runs-on: ubuntu-latest
+      # steps to perform in job
+      steps:
+        - uses: ./.github/workflows/.production.yml
+          with:
+            path: "./TP01/httpd"
+            docker_name: "tp-devops-cpe-httpd"
+    ```

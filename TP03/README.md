@@ -38,19 +38,56 @@
 - Delete the unused files
 - Add the follwing lines in the tasks/main.yml : 
     ```
-    
+    - name: Run Backend
+      docker_container:
+        name: Backend
+        image: timlab74/tp-devops-cpe-backend
+      networks:
+        - name : network_one
     ```
+- Add : `- backend` to the roles in the playbook.yml
 ### Database
 - Create role : `ansible-galaxy init ansible/roles/database`
 - Delete the unused files
 - Add the follwing lines in the tasks/main.yml : 
     ```
-    
+    - name: Run Database
+      docker_container:
+        name: Database
+        image: timlab74/tp-devops-cpe-database
+      networks:
+        - name : network_one
+      volumes:
+        - /database:/var/lib/postgresql/data
     ```
+- Add : `- database` to the roles in the playbook.yml
 ### Httpd
 - Create role : `ansible-galaxy init ansible/roles/httpd`
 - Delete the unused files
 - Add the follwing lines in the tasks/main.yml : 
     ```
-    
+    - name: Run HTTPD
+      docker_container:
+        name: httpd
+        image: timlab74/tp-devops-cpe-httpd
+      networks:
+        - name : network_one
+      ports:
+        - 80:80
     ```
+- Add : `- httpd` to the roles in the playbook.yml
+### Network
+- Create role : `ansible-galaxy init ansible/roles/network`
+- Delete the unused files
+- Add the follwing lines in the tasks/main.yml : 
+    ```
+    - name: Create a network
+      docker_network:
+        name: network_one
+    ```
+- Add : `- network` to the roles in the playbook.yml
+### Verif
+- You can now check via the links
+    - http://timothee.labrosse.takima.cloud/departments/IRC/students
+    - http://timothee.labrosse.takima.cloud/
+# Front

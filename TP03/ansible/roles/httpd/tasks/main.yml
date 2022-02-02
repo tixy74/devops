@@ -1,0 +1,10 @@
+---
+# tasks file for ansible/roles/httpd
+- name: Run HTTPD
+  docker_container:
+    name: httpd
+    image: timlab74/tp-devops-cpe-httpd
+    networks:
+      - name : network_one
+    ports:
+      - 80:80

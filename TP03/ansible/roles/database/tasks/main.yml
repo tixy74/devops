@@ -1,2 +1,10 @@
 ---
 # tasks file for ansible/roles/database
+- name: Run Database
+  docker_container:
+    name: Database
+    image: timlab74/tp-devops-cpe-database
+    networks:
+      - name : network_one
+    volumes:
+      - /database:/var/lib/postgresql/data

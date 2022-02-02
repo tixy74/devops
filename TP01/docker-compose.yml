@@ -16,7 +16,7 @@ services:
       - /database:/var/lib/postgresql/data
   httpd:
     build:
-      ./frontend
+      ./httpd
     ports:
       - 80:80
     networks:

@@ -1,6 +1,8 @@
 ---
 # tasks file for ansible/roles/backend
-- name: Run HTTPD
+- name: Run Backend
   docker_container:
-    name: httpd
-    image: jdoe/my-httpd:1.0
+    name: Backend
+    image: timlab74/tp-devops-cpe-backend
+    networks:
+      - name : network_one
