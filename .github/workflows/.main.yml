@@ -91,7 +91,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           # relative path to the place where source code with Dockerfile is located
-          context: ./TP03/frontend
+          context: ./TP03/front
           # Note: tags has to be all lower-case
           tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-frontend
           # build on feature branches, push only on main branch
