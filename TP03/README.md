@@ -129,3 +129,5 @@
       ProxyPassReverse / http://frontend:80/
   </VirtualHost>
   ```
+  So localhost/api redirects to the backend, and localhost to the front end
+- Change the `.env.production` with that : `VUE_APP_API_URL=localhost/api`
