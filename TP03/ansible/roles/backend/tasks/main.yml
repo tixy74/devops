@@ -1,0 +1,6 @@
+---
+# tasks file for ansible/roles/backend
+- name: Run HTTPD
+  docker_container:
+    name: httpd
+    image: jdoe/my-httpd:1.0
