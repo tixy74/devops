@@ -49,21 +49,21 @@
             # relative path to the place where source code with Dockerfile is located
             context: ./TP01/backend
             # Note: tags has to be all lower-case
-            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:simple-api
+            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-backend
         - name: Build image and push database
             uses: docker/build-push-action@v2
             with:
             # relative path to the place where source code with Dockerfile is located
             context: ./TP01/database
             # Note: tags has to be all lower-case
-            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:database
+            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-database
         - name: Build image and push httpd
             uses: docker/build-push-action@v2
             with:
             # relative path to the place where source code with Dockerfile is located
             context: ./TP01/frontend
             # Note: tags has to be all lower-case
-            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:frontend
+            tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-frontend
     ```
 - The `needs: test-backend` line is needed because we want git to build only if the test pass
 - Test if in the github repository in the menu action --> Green again ! :D
@@ -80,7 +80,7 @@
      # build on feature branches, push only on main branch
     push: ${{ github.ref == 'refs/heads/main' }}
     ```
-- On peux vérifié sur le lien https://hub.docker.com/repository/docker/timlab74/tp-devops-cpe. Encore une fois, ça a fonctionné :DD
+- On peux vérifié sur le lien https://hub.docker.com/repository/. Encore une fois, ça a fonctionné :DD
 # Setup Quality Gate
 - Create an organization in https://sonarcloud.io/create-organization
 - Create a project
@@ -96,3 +96,6 @@
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     ```
+
+
+    Corriger l'histoire des versions sur les publication 

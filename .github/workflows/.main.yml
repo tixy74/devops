@@ -44,7 +44,7 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ./TP01/backend
           # Note: tags has to be all lower-case
-          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:backend
+          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-backend
            # build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
       - name: Build image and push database
@@ -53,7 +53,7 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ./TP01/database
           # Note: tags has to be all lower-case
-          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:database
+          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-database
           # build on feature branches, push only on main branch
           push: ${{ github.ref == 'refs/heads/main' }}
       - name: Build image and push httpd
@@ -62,4 +62,4 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ./TP01/frontend
           # Note: tags has to be all lower-case
-          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe:frontend
+          tags: ${{secrets.DOCKER_USERNAME}}/tp-devops-cpe-frontend
