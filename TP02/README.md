@@ -96,6 +96,5 @@
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     ```
-
-
-    Corriger l'histoire des versions sur les publication 
+- In the website https://sonarcloud.io/project/new_code?id=tixy74_devops put `Previous version`
+- Then when you commit and push, go check on https://sonarcloud.io/project/overview?id=tixy74_devops. Once again, this is green ! :DDD (smiley très content)
