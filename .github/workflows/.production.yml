@@ -1,6 +1,6 @@
 name: CI devops 2022 CPE production
-  on:
-    workflow_call:
+on:
+  workflow_call:
 
 jobs:
   #define job to build and publish docker image of backend
