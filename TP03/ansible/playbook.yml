@@ -2,9 +2,9 @@
   gather_facts: false
   become: yes
   roles:
-    - network
     - docker
-    - backend
+    - network
     - database
+    - backend
     - httpd
     - frontend

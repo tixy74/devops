@@ -33,19 +33,16 @@
     ```
 - Cut / paste the task from the play book into the main.yml of the dockers role tasks (without the "tasks:" title).
 ## Deploy the app
-### Backend
-- Create role : `ansible-galaxy init ansible/roles/backend`
+### Network
+- Create role : `ansible-galaxy init ansible/roles/network`
 - Delete the unused files
 - Add the follwing lines in the tasks/main.yml : 
     ```
-    - name: Run Backend
-      docker_container:
-        name: backend
-        image: timlab74/tp-devops-cpe-backend
-      networks:
-        - name : network_one
+    - name: Create a network
+      docker_network:
+        name: network_one
     ```
-- Add : `- backend` to the roles in the playbook.yml
+- Add : `- network` to the roles in the playbook.yml
 ### Database
 - Create role : `ansible-galaxy init ansible/roles/database`
 - Delete the unused files
@@ -61,6 +58,19 @@
         - /database:/var/lib/postgresql/data
     ```
 - Add : `- database` to the roles in the playbook.yml
+### Backend
+- Create role : `ansible-galaxy init ansible/roles/backend`
+- Delete the unused files
+- Add the follwing lines in the tasks/main.yml : 
+    ```
+    - name: Run Backend
+      docker_container:
+        name: backend
+        image: timlab74/tp-devops-cpe-backend
+      networks:
+        - name : network_one
+    ```
+- Add : `- backend` to the roles in the playbook.yml
 ### Httpd
 - Create role : `ansible-galaxy init ansible/roles/httpd`
 - Delete the unused files
@@ -76,16 +86,6 @@
         - 80:80
     ```
 - Add : `- httpd` to the roles in the playbook.yml
-### Network
-- Create role : `ansible-galaxy init ansible/roles/network`
-- Delete the unused files
-- Add the follwing lines in the tasks/main.yml : 
-    ```
-    - name: Create a network
-      docker_network:
-        name: network_one
-    ```
-- Add : `- network` to the roles in the playbook.yml
 ### Verif
 - You can now check via the links
     - http://timothee.labrosse.takima.cloud/departments/IRC/students
@@ -130,9 +130,8 @@
   </VirtualHost>
   ```
   So localhost/api redirects to the backend, and localhost to the front end
-- Change the `.env.production` with that : `VUE_APP_API_URL=localhost/api`
-- Publish on the domain with : `ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml`
 - Change the frontend .env.production for : `VUE_APP_API_URL=timothee.labrosse.takima.cloud/api`
+- Publish on the domain with : `ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml`
 - Check if it works on http://timothee.labrosse.takima.cloud and http://timothee.labrosse.takima.cloud/api. It works ! 
 - Delete the images the rebuild with ansible : `ssh -i id_rsa centos@timothee.labrosse.takima.cloud` and in the ssh :
   ```
@@ -146,5 +145,7 @@
   sudo docker image rm -f timlab74/tp-devops-cpe-httpd
   sudo docker image rm -f timlab74/tp-devops-cpe-database
   ```
-
 # Continuous deployment
+
+# Surprise 
+J'ai gagné la surprise ! J'était le premier :DDDDD (--> smiley vraiment très heureux).
