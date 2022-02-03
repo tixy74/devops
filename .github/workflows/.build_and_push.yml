@@ -20,9 +20,9 @@ on:
     secrets: # requiring secrets
       SONAR_TOKEN:
         required: true
-      DOCKERHUB_USERNAME:
+      DOCKER_USERNAME:
         required: true
-      DOCKERHUB_TOKEN:
+      DOCKER_TOKEN:
         required: true         
 
 jobs:  
