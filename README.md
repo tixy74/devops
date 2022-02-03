@@ -91,6 +91,7 @@ On utilise une image qui est le fichier de system et la configuration de l'appli
 ## Autre 
 - Stash (mettre les modifs de coté pour faire un pull par exemple) : ``git stash``
 - Rewrite history : `git rebase -i`
+- Verionnée : `git tag XXX` et `git push tag`
 # Ansible
 ## SSH connection :
 - Changer les droits pour la clé : `chmod 400 <path_to_your_key>`

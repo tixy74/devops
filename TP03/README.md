@@ -132,5 +132,6 @@
   So localhost/api redirects to the backend, and localhost to the front end
 - Change the `.env.production` with that : `VUE_APP_API_URL=localhost/api`
 - Publish on the domain with : `ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml`
+- Change the frontend .env.production for : `VUE_APP_API_URL=timothee.labrosse.takima.cloud/api`
 - Check if it works on http://timothee.labrosse.takima.cloud and http://timothee.labrosse.takima.cloud/api. It works ! 
 # Continuous deployment
