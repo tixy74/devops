@@ -2,7 +2,7 @@
 # tasks file for ansible/roles/backend
 - name: Run Backend
   docker_container:
-    name: Backend
+    name: backend
     image: timlab74/tp-devops-cpe-backend
     networks:
       - name : network_one

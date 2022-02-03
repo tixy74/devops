@@ -2,7 +2,7 @@
 # tasks file for ansible/roles/frontend
 - name: Run Frontend
   docker_container:
-    name: Frontend
+    name: frontend
     image: timlab74/tp-devops-cpe-frontend
     networks:
       - name : network_one

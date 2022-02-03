@@ -40,7 +40,7 @@
     ```
     - name: Run Backend
       docker_container:
-        name: Backend
+        name: backend
         image: timlab74/tp-devops-cpe-backend
       networks:
         - name : network_one
@@ -53,7 +53,7 @@
     ```
     - name: Run Database
       docker_container:
-        name: Database
+        name: database
         image: timlab74/tp-devops-cpe-database
       networks:
         - name : network_one
@@ -110,7 +110,7 @@
     ```
     - name: Run Frontend
       docker_container:
-        name: Frontend
+        name: frontend
         image: timlab74/tp-devops-cpe-frontend
       networks:
         - name : network_one
@@ -131,3 +131,6 @@
   ```
   So localhost/api redirects to the backend, and localhost to the front end
 - Change the `.env.production` with that : `VUE_APP_API_URL=localhost/api`
+- Publish on the domain with : `ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml`
+- Check if it works on http://timothee.labrosse.takima.cloud and http://timothee.labrosse.takima.cloud/api. It works ! 
+# Continuous deployment
