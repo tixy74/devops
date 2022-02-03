@@ -56,5 +56,5 @@ jobs:
     uses: ./.github/workflows/.build_and_push.yml  # 
     secrets: # Passing secrets
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      DOCKERHUB_USERNAME: ${{secrets.DOCKER_USERNAME }} 
-      DOCKERHUB_TOKEN: ${{secrets.DOCKER_TOKEN }}
+      DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME }} 
+      DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN }}
