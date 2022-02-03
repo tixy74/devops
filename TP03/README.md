@@ -134,4 +134,17 @@
 - Publish on the domain with : `ansible-playbook -i ansible/inventories/setup.yml ansible/playbook.yml`
 - Change the frontend .env.production for : `VUE_APP_API_URL=timothee.labrosse.takima.cloud/api`
 - Check if it works on http://timothee.labrosse.takima.cloud and http://timothee.labrosse.takima.cloud/api. It works ! 
+- Delete the images the rebuild with ansible : `ssh -i id_rsa centos@timothee.labrosse.takima.cloud` and in the ssh :
+  ```
+  sudo docker rm -f frontend
+  sudo docker rm -f backend
+  sudo docker rm -f httpd
+  sudo docker rm -f database
+
+  sudo docker image rm -f timlab74/tp-devops-cpe-frontend
+  sudo docker image rm -f timlab74/tp-devops-cpe-backend
+  sudo docker image rm -f timlab74/tp-devops-cpe-httpd
+  sudo docker image rm -f timlab74/tp-devops-cpe-database
+  ```
+
 # Continuous deployment
