@@ -17,13 +17,6 @@
 name: CI devops 2022 CPE
 on:
   workflow_call:
-      inputs:
-        path:
-          required: true
-          type: string
-        docker_name:
-          required: true
-          type: string
     secrets: # requiring secrets
       SONAR_TOKEN:
         required: true
