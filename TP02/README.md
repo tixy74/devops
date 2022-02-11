@@ -114,74 +114,25 @@
   ```
 - Remove the `- develop` in branchs in the main so that the dockers are pushed only when there is a push in main
 ## Split the build to avoid repetition
-Since the jobs (actually they are steps) of building and pushing the 3 and after 4 dockers is the same code with a few change, in here, we are going to make a file that dose it with vars and use those.
-- Make a `.build_and_push.yml` in the workflows directory and put :
-    ```
-    name: CI devops 2022 CPE
-    on:
-      workflow_call:
-          inputs:
-            path:
-              required: true
-              type: string
-            docker_name:
-              required: true
-              type: string
-            
-    jobs:
-      build-and-push-docker-image:
-        steps:
-          - name: Build image and push backend
-            uses: docker/build-push-action@v2
-            with:
-              # relative path to the place where source code with Dockerfile is located
-              context: ${{inputs.path}}
-              # Note: tags has to be all lower-case
-              tags: ${{secrets.DOCKER_USERNAME}}/${{inputs.docker_name}}
-              # build on feature branches, push only on main branch
-              push: ${{ github.ref == 'refs/heads/main' }}
-    ```
-- Replace the 3 steps of the build and push docker images by 3 jobs using the .build_and_push.yml
-    ```
-    #define job to build and publish docker image of backend
-    build-and-push-backend:
-      # run only when code is compiling and tests are passing
-      needs: test-backend
-      # run only when directory backend as any changes in it
-      only:
-        changes:
-          - ./TP01/backend/**/*
-      runs-on: ubuntu-latest
-      # steps to perform in job
-      steps:
-        - uses: ./.github/workflows/.production.yml
-          with:
-            path: "./TP01/backend"
-            docker_name: "tp-devops-cpe-backend"
-      #define job to build and publish docker image of backend
-    build-and-push-database:
-      # run only when directory database as any changes in it
-      only:
-        changes:
-          - ./TP01/database/**/*
-      runs-on: ubuntu-latest
-      # steps to perform in job
-      steps:
-        - uses: ./.github/workflows/.production.yml
-          with:
-            path: "./TP01/database"
-            docker_name: "tp-devops-cpe-database"
-      #define job to build and publish docker image of backend
-    build-and-push-frontend:
-      # run only when directory frontend as any changes in it
-      only:
-        changes:
-          - ./TP01/frontend/**/*
-      runs-on: ubuntu-latest
-      # steps to perform in job
-      steps:
-        - uses: ./.github/workflows/.production.yml
-          with:
-            path: "./TP01/httpd"
-            docker_name: "tp-devops-cpe-httpd"
-    ```
+- Remove the job the builds and push from the main.yml, and put it in a different yml with 3 differents jobs.
+- Put the following config to pass secrets and precise that it is called on workflow call : 
+  ```
+    workflow_call:
+    secrets: # requiring secrets
+      SONAR_TOKEN:
+        required: true
+      DOCKER_USERNAME:
+        required: true
+      DOCKER_TOKEN:
+        required: true   
+  ```
+- Call it in the main using the var uses : 
+  ```
+    # needs: test-backend
+    # steps to perform in job
+    uses: ./.github/workflows/.build_and_push.yml  # 
+    secrets: # Passing secrets
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME }} 
+      DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN }}
+  ```
